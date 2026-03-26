@@ -1,0 +1,70 @@
+#
+# Copyright 2026 Martin Goellnitz for Provocon.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Environment variables needed:
+# SIGNING_KEY_FILE
+# SIGNING_KEY
+# SIGNING_PASSWORD
+# PUBLICATION_KEY_FILE
+# PUBLICATION_KEY
+# PUBLICATION_PASSWORD
+# CENTRAL_USER
+# CENTRAL_TOKEN
+#
+image: gradle:jdk21
+
+stages:
+  - library
+
+variables:
+    GRADLE_USER_HOME: /tmp/.gradle
+
+build:
+  stage: library
+  except:
+    - tags
+  script:
+  - |
+    gpg --dearmor < $SIGNING_KEY_FILE > key.gpg
+    ./gradlew -Psigning.keyId=$SIGNING_KEY -Psigning.password=$SIGNING_PASSWORD -Psigning.secretKeyRingFile=key.gpg \
+              -PcoremediaUsername=$COREMEDIA_REPOSITORY_USER -PcoremediaPassword=$COREMEDIA_REPOSITORY_PASSWORD \
+              build sign publishAllPublicationsToGitLabRepository
+  artifacts:
+    paths:
+    - build/libs/*
+    expire_in: 5 days
+    name: ${CI_BUILD_STAGE}
+
+release:
+  stage: library
+  only:
+    - tags
+  script:
+  - |
+    gpg --dearmor < $PUBLICATION_KEY_FILE > key.gpg
+    ./gradlew -Psigning.keyId=$PUBLICATION_KEY -Psigning.password=$PUBLICATION_PASSWORD -Psigning.secretKeyRingFile=key.gpg \
+              -PcoremediaUsername=$COREMEDIA_REPOSITORY_USER -PcoremediaPassword=$COREMEDIA_REPOSITORY_PASSWORD \
+              -PmavenCentralUsername=$CENTRAL_USER -PmavenCentralPassword=$CENTRAL_TOKEN \
+              build sign publishToMavenCentral
+  artifacts:
+    paths:
+    - build/libs/*
+    expire_in: 1 days
+    name: ${CI_BUILD_STAGE}
+
+cache:
+  paths:
+  - /tmp/.gradle/caches/
+  - /tmp/.gradle/wrapper/
