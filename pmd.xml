@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Copyright 2026 Martin Goellnitz for Provocon.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<ruleset name="Custom Ruleset for Project"
+         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+         xmlns='http://pmd.sourceforge.net/ruleset/2.0.0'
+         xsi:schemaLocation='http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd'>
+
+  <description>
+    Nearly default setup of PMD rules with some exceptions.
+    Some of the default rules of PMD don't help in parts of the code to improve
+    readability and correctness. It may well not be in sync with latest changes
+    of PMD and partly is copied from other projects.
+  </description>
+
+  <rule ref="category/java/bestpractices.xml">
+    <exclude name="GuardLogStatement"/>
+    <exclude name="UseVarargs"/>
+  </rule>
+  <rule ref="category/java/bestpractices.xml/UnitTestContainsTooManyAsserts">
+    <properties>
+      <property name="maximumAsserts" value="12" />
+    </properties>
+  </rule>
+  <rule ref="category/java/codestyle.xml">
+    <exclude name="AtLeastOneConstructor"/>
+    <exclude name="LocalVariableCouldBeFinal"/>
+    <exclude name="MethodArgumentCouldBeFinal"/>
+    <exclude name="OnlyOneReturn"/>
+    <exclude name="ShortVariable"/>
+    <exclude name="UselessParentheses"/>
+    <exclude name="UseUnderscoresInNumericLiterals"/>
+  </rule>
+  <rule ref="category/java/codestyle.xml/LinguisticNaming">
+    <properties>
+      <property name="checkSetters" value="false"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/codestyle.xml/LongVariable">
+    <properties>
+      <property name="minimum" value="34"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml">
+    <exclude name="AvoidThrowingRawExceptionTypes"/>
+    <exclude name="CyclomaticComplexity"/>
+    <exclude name="LoosePackageCoupling"/>
+    <exclude name="LawOfDemeter"/>
+    <!-- not necessarily a good ideas for other projects -->
+    <exclude name="NPathComplexity"/>
+  </rule>
+  <rule ref="category/java/design.xml/CouplingBetweenObjects">
+    <properties>
+      <property name="threshold" value="51" />
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
+    <properties>
+      <property name="problemDepth" value="5"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/CognitiveComplexity">
+    <properties>
+      <property name="reportLevel" value="40"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/ExcessiveImports">
+    <properties>
+      <property name="minimum" value="35"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/ExcessivePublicCount">
+    <properties>
+      <property name="minimum" value="65"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/NcssCount" >
+    <properties>
+      <property name="classReportLevel" value="1500"/>
+      <property name="methodReportLevel" value="130"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/TooManyMethods">
+    <properties>
+      <property name="maxmethods" value="30"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/documentation.xml">
+    <exclude name="CommentSize"/>
+  </rule>
+  <rule ref="category/java/documentation.xml/CommentRequired">
+    <properties>
+      <property name="fieldCommentRequirement" value="ignored"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/errorprone.xml">
+    <exclude name="AvoidCatchingGenericException"/>
+    <exclude name="AvoidLiteralsInIfCondition"/>
+    <exclude name="TestClassWithoutTestCases"/>
+  </rule>
+  <rule ref="category/java/multithreading.xml">
+    <exclude name="UseConcurrentHashMap"/>
+    <exclude name="AvoidSynchronizedStatement"/>
+    <exclude name="DoNotUseThreads"/>
+  </rule>
+  <rule ref="category/java/performance.xml">
+    <exclude name="AvoidInstantiatingObjectsInLoops"/>
+    <exclude name="AddEmptyString"/>
+  </rule>
+  <rule ref="category/java/security.xml"/>
+
+</ruleset>

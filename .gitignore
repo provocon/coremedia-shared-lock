@@ -1,0 +1,12 @@
+/.gradle
+/gradle.properties
+/build
+/.classpath
+/.project
+/.settings
+/private/cache
+*.nb-gradl*
+/wiki.html
+/.trackdown
+/github-issues.md
+/roadmap.md
